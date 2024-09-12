@@ -13,7 +13,7 @@ function Register()
 {
 	
 
-var user={fname:null,uname:null,email:null,pwd:null,gender:null};
+var user={fname:null,uname:null,email:null,pwd:null,gender:null,pfp:"default.jpg"};
 
 useEffect(() => {
 	 document.getElementById('err').style.visibility = "hidden";
