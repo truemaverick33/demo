@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1:3306
--- Generation Time: Sep 12, 2024 at 08:36 PM
+-- Generation Time: Sep 14, 2024 at 11:59 AM
 -- Server version: 8.3.0
 -- PHP Version: 8.2.18
 
@@ -94,8 +94,19 @@ CREATE TABLE IF NOT EXISTS `friend` (
   `frd_id` int NOT NULL AUTO_INCREMENT,
   `user_id1` int NOT NULL,
   `user_id2` int NOT NULL,
+  `status` int NOT NULL,
+  `time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`frd_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `friend`
+--
+
+INSERT INTO `friend` (`frd_id`, `user_id1`, `user_id2`, `status`, `time`) VALUES
+(1, 1, 2, 0, '2024-09-14 07:07:06'),
+(8, 4, 3, 1, '2024-09-14 10:13:41'),
+(9, 1, 3, 1, '2024-09-14 11:14:01');
 
 -- --------------------------------------------------------
 
@@ -146,17 +157,18 @@ CREATE TABLE IF NOT EXISTS `user_master` (
   `pfp` text NOT NULL,
   `isadmin` int NOT NULL,
   PRIMARY KEY (`user_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `user_master`
 --
 
 INSERT INTO `user_master` (`user_id`, `fullname`, `username`, `email_id`, `pwd`, `gender`, `pfp`, `isadmin`) VALUES
-(1, 'Vaishnavi Pandya', 'princess10', 'vaishnavipandya@gmail.com', '793121fbe27c19026f0e083dd0bf93e09496f7ec820a753f31d86c4f212edec7', 'Female', 'user1.jpg', 0),
-(2, 'Cha Eunwoo', 'eunwoo30', 'chaeunwoo@gmail.com', '6a75aa5df62407b61d07a3a32bc241c7f08866c2e0f03459a23ef9fd7c755220', 'Male', 'user2.jpg', 1),
-(3, 'Shraddha Kapoor', 'sparkling_girl23', 'shraddhakapoor@gmail.com', '4e66d85c6cb6ffaa50d0cafc9412535c0394421e16655840965debf4a3a9cba0', 'Female', 'default.jpg', 0),
-(4, 'Ayushi Shah', 'ayushi18', 'ayushishah@gmail.com', '9ca98d42df1439ab902a2be1f5a7d80fec63d10781337188270b3110c7525759', 'Female', 'default.jpg', 0);
+(1, 'Vaishnavi Pandya', 'princess10', 'vaishnavipandya@gmail.com', '793121fbe27c19026f0e083dd0bf93e09496f7ec820a753f31d86c4f212edec7', 'Female', '13924170639user1.jpg', 0),
+(2, 'Cha Eunwoo', 'eunwoo30', 'chaeunwoo@gmail.com', 'cb5679b0becebdbbb8f3064038274aeb977d1f9a48343bd98ace060e35b8611f', 'Male', 'user2.jpg', 1),
+(3, 'Shraddha Kapoor', 'sparkling_girl23', 'shraddhakapoor@gmail.com', 'ec73f1cb53b2219c862b992e226e8d8b5c819efe0bd4e8901dc877173f00da3a', 'Female', 'default.jpg', 0),
+(4, 'Ayushi Shah', 'ayushi18', 'ayushishah@gmail.com', '9ca98d42df1439ab902a2be1f5a7d80fec63d10781337188270b3110c7525759', 'Female', 'default.jpg', 0),
+(5, 'Misha Patel', 'mishy12', 'mishapatel@gmail.com', 'cf333f0487504ea767fe644995c14d6fc6bcb2b8d68c2417f3158c18dafdd075', 'Female', 'default.jpg', 0);
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
