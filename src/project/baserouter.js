@@ -14,10 +14,15 @@ import Button from 'react-bootstrap/Button';
 import Register from './Register.js'
 import Login from './Login.js'
 import Home from './Home.js';
+import Profile from './Profile.js';
+import Friends from './Friends.js';
 import { Carousel } from 'react-bootstrap';
+import logo from './logo.png';
+import connstr from './constr.js';
 
 function BaseRoute()
 {
+const [noti,setNoti] = useState(0);
 
 useEffect(() => {
 	if(localStorage.getItem("logstatus")==="true"){
@@ -38,7 +43,8 @@ useEffect(() => {
 	  document.getElementById('logged').style.display = "none";
 	  document.getElementById('mod').style.display = "none";
 	  document.getElementById('normal').style.display = "none";
-	}	
+	}
+	getNewFriendReqCount();
 	},[]);
 
 const logout = () =>{
@@ -48,17 +54,36 @@ const logout = () =>{
 		console.log("Logged Out");
 }
 
+const getNewFriendReqCount = () => {
+  var uid = localStorage.getItem("userid");
+  if(localStorage.getItem("logstatus")==="true"){
+  $.ajax({type:"POST",url:connstr+"/backend/select.php",data:{datafor:'freqsc',uid:uid,ts:localStorage.getItem("lastcheck")},success(data){
+	var obj = JSON.parse(data);
+	if(obj[0].cnt > 0){
+	setNoti(obj[0].cnt);
+	setTimeout(() => {
+		getNewFriendReqCount();
+	}, 10000);
+	}
+	else{
+	setTimeout(() => {
+		getNewFriendReqCount();
+	}, 10000);
+	}
+  }});
+  }
+}
 
 
 return(
 <Router>
 <Navbar style={{boxShadow: '0 1px 6px rgba(0, 0, 0, 0.12), 0 1px 4px rgba(0, 0, 0, 0.24)', backgroundColor:"#EF5A6F",fontFamily:"'Garamond', serif"}} variant="dark" id="nb">
         <Container>
-<Navbar.Brand href="/" style={{color:"#FFF1DB"}}><h1>VerseVibe</h1></Navbar.Brand>
+<Navbar.Brand href="/" style={{color:"#FFF1DB"}}><h1><img src={logo} style={{height:"42px",width:"42px"}}/>VerseVibe</h1></Navbar.Brand>
           <Nav className="me-auto" id="normal">
             <Nav.Link href="/" >Home</Nav.Link>
             <Nav.Link href="books" >Books</Nav.Link>
-			<Nav.Link href="friends" id="mport" >Friends</Nav.Link>
+			<Nav.Link href="friends" id="mport" >Friends<Badge pill style={{backgroundColor:"#536493"}}>{noti == 0?"":noti}</Badge></Nav.Link>
 			<Nav.Link href="chats" id="mtends">Chats</Nav.Link>
           </Nav>
 	<Nav className="me-auto" id="mod">
@@ -84,7 +109,8 @@ return(
 <Route exact path="/" element={<Home />} />
 <Route path="/login" element={<Login />} />
 <Route path="/register" element={<Register />} /> 
-
+<Route path="/profile" element={<Profile />} />
+<Route path="/friends" element={<Friends />} />
 </Routes>
 </Router>
 );

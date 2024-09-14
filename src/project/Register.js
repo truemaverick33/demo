@@ -8,6 +8,7 @@ import Col from 'react-bootstrap/Col';
 import Row from 'react-bootstrap/Row';
 import Alert from 'react-bootstrap/Alert';
 import SHA256 from 'crypto-js/sha256';
+import connstr from './constr.js';
 
 function Register()
 {
@@ -100,10 +101,10 @@ const handleReg = (e) =>{
 		e.preventDefault();
 		e.stopPropagation();
 		user.pwd = SHA256(user.pwd).toString();
-		$.ajax({type:"POST",url:"http://localhost/backend/insert.php?datafor=register",data:user,success(data){
-			console.log(data);
+		$.ajax({type:"POST",url:connstr+"/backend/insert.php?datafor=register",data:user,success(data){
+			//console.log(data);
 			var obj = JSON.parse(data);
-			console.log(obj);
+			//console.log(obj);
 			if(obj.regstat == "success"){
 				alert("Registration successfull!");
 				window.location.href="/login";

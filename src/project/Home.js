@@ -10,31 +10,8 @@ import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import { Carousel }  from 'react-bootstrap'; 
 import Card from 'react-bootstrap/Card';
-import love2 from './covers/love2.jpg';
-import scifi1 from './covers/scifi1.jpg';
-import fanatsy1 from './covers/fantasy1.jpg';
-import action1 from './covers/action1.jpg';
-import action2 from './covers/action2.jpg';
-import adv1 from './covers/adv1.jpg';
-import adv2 from './covers/adv2.jpg';
-import adv3 from './covers/adv3.jpg';
-import comic1 from './covers/comic1.jpg';
-import comic2 from './covers/comic2.jpg';
-import fanatsy2 from './covers/fantasy2.jpg';
-import fanatsy3 from './covers/fantasy3.jpg';
-import history1 from './covers/history1.jpg';
-import history2 from './covers/history2.jpg';
-import horror1 from './covers/horror1.jpg';
-import horror2 from './covers/horror2.jpg';
-import love1 from './covers/love1.jpg';
-import rom1 from './covers/rom1.jpg';
-import rom2 from './covers/rom2.jpg';
-import scifi2 from './covers/scifi2.jpg';
-import scifi3 from './covers/scifi3.jpg';
-import thriller1 from './covers/thriller1.jpg';
-import thriller2 from './covers/thriller2.jpg';
-import thriller3 from './covers/thriller3.jpg';
 import Image from 'react-bootstrap/Image';
+import connstr from './constr.js';
 
 function Home(){
     
@@ -42,14 +19,16 @@ function Home(){
 	 const [books, setBooks] = useState([]);
 	
 	useEffect(() => {
-		$.ajax({type:"POST",url:"http://localhost/backend/select.php",data:{datafor:"users"},success(data){
+		var uid = localStorage.getItem("userid");
+		$.ajax({type:"POST",url:connstr+"/backend/select.php",data:{datafor:"usersug",uid:uid},success(data){
+			console.log(data);
 			var obj = JSON.parse(data);
 			if(obj.length > 0){
 				setUsers(obj);
 			}
 		}});
 		
-		$.ajax({type:"POST",url:"http://localhost/backend/select.php",data:{datafor:"books"},success(data){
+		$.ajax({type:"POST",url:connstr+"/backend/select.php",data:{datafor:"books"},success(data){
 			console.log(data);
 			var obj = JSON.parse(data);
 			if(obj.length > 0){
@@ -59,40 +38,59 @@ function Home(){
 		
 	},[]);
 	
+	const sendFriendReq = (e,fid) =>{
+		var uid = localStorage.getItem("userid");
+		$.ajax({type:"POST",url:connstr+"/backend/insert.php?datafor=addfriend",data:{uid:uid,fid:fid},success(data){
+			console.log(data);
+			var obj = JSON.parse(data);
+			if(obj.fr == "success"){
+				alert("Friend Request Sent!");
+				window.location.reload();
+			}
+			else{
+				alert("Could Not Send Friend Request!");
+				window.location.reload();
+		}
+		}});
+	}
+	
 	const renderUsers = () => {
+		var uid = localStorage.getItem("userid");
 		let userItems = [];
-		const imgFold = require.context('./userpic',true);
-		for(let i = 0; i < users.length; i++)
+		for(let i = 0; i < users.length; i++){
+		if(uid == users[i].user_id){
+			continue;
+		}
 		userItems.push(<Container key={i} style={{borderRadius:"12px", maxWidth:"19rem", maxHeight:"6rem",background:"white",boxShadow:"0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19)",margin:"5px 5px 5px 5px"}}>
 						<br/>
 						<Container align="center">
 						<Row>
 						<Col>
-						<Image style={{height:"80px",width:"80px",position:"relative",top:"-16px",left:"-12px"}} src={imgFold(`./${users[i].pfp}`)} roundedCircle />
+						<Image style={{height:"80px",width:"80px",position:"relative",top:"-16px",left:"-12px"}} src={connstr+"/backend/userpic/"+users[i].pfp} roundedCircle />
 						</Col>
 						<Col>
 						<b style={{position:"relative",top:"-14px",left:"-14px"}}>@{users[i].username}</b>
 						<br/>
-						<Button style={{backgroundColor:"#536493",borderColor:"#536493",fontSize:"10px",position:"relative",top:"-6px",left:"-12px"}}>Add Friend</Button>
+						<Button style={{backgroundColor:"#536493",borderColor:"#536493",fontSize:"10px",position:"relative",top:"-6px",left:"-12px"}} onClick={(event) => sendFriendReq(event,users[i].user_id)}>Add Friend</Button>
 						</Col>
 						</Row>
 						</Container>
 						<br/>
 		</Container>);
+		}
 		return userItems;
 	};
 	
 	const renderBooks = () => {
 		let carouselItems = [];
 		let currentSlide = [];
-		const imgFold = require.context('./covers',true);
 		for(let i = 0; i < books.length; i++){
 			currentSlide.push(
 				<Col key={i} style={{ borderRadius: "12px", maxWidth: "18rem", background: "white", boxShadow: "0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19)", margin: "5px 5px 5px 5px" }}>
 				<Container>
 				<Row>
 				<Col md={5}>
-                <Image style={{ height: "100px", width: "90px", margin: "3px" }} src={imgFold(`./${books[i].cover}`)} thumbnail />
+                <Image style={{ height: "100px", width: "90px", margin: "3px" }} src={connstr+"/backend/covers/"+books[i].cover} thumbnail />
 				</Col>
 				<Col md={7}>
                 <b style={{fontSize:"10px",whiteSpace: "nowrap",overflow: "hidden",textOverflow: "ellipsis" }}>{books[i].title}</b>
@@ -143,13 +141,13 @@ function Home(){
 				<div align="center" style={{position:"relative",left:"320px",zIndex:"1"}}>
 					<Carousel style={{width:"80vh"}}>
 						<Carousel.Item interval={2500}>
-							<img style={{height:'50vh',width:'45vh'}} src={love2} alt="First slide"/>
+							<img style={{height:'50vh',width:'45vh'}} src={connstr+"/backend/covers/love2.jpg"} alt="First slide"/>
 						</Carousel.Item>
 						<Carousel.Item interval={2500}>
-							<img style={{height:'50vh',width:'45vh'}} src={scifi1} alt="Second slide"/>			  
+							<img style={{height:'50vh',width:'45vh'}} src={connstr+"/backend/covers/scifi1.jpg"} alt="Second slide"/>			  
 						</Carousel.Item>  
 						<Carousel.Item interval={2500}>
-							<img style={{height:'50vh',width:'45vh'}} src={fanatsy1} alt="Third slide"/>
+							<img style={{height:'50vh',width:'45vh'}} src={connstr+"/backend/covers/fantasy1.jpg"} alt="Third slide"/>
 						</Carousel.Item> 
 					</Carousel>
 				</div>
