@@ -41,4 +41,20 @@ else if($datafor == "addfriend"){
 		echo json_encode($data);
 	}
 }
+else if($datafor == "messages"){
+	$uid = $_POST['sender'];
+	$uid2 = $_POST['rec'];
+	$cid = $_POST['cid'];
+	$msg = $_POST['msg'];
+	$st = 0;
+	$sql = "INSERT INTO messages(chat_id,msg,from_uid,to_uid) VALUES('$cid','$msg','$uid','$uid2')";
+	if(mysqli_query($conn,$sql)){
+		$data=array("fr"=>"success");
+		echo json_encode($data);
+	}
+	else{
+		$data=array("fr"=>"fail");
+		echo json_encode($data);
+	}
+}
 ?>

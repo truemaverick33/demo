@@ -145,4 +145,81 @@ else if($datafor=="friends"){
 		echo json_encode([]);
 	}
 }
+else if($datafor=="chats"){
+	$uid = $_POST['uid'];
+	$sql="SELECT b.title AS title,b.cover AS cover,c.chat_id AS cid, u1.pfp as user1p, u2.pfp as user2p, u1.username as user1n, u2.username as user2n FROM chats c INNER JOIN book_master b on c.book_id=b.book_id INNER JOIN friend f on c.frd_id=f.frd_id LEFT JOIN user_master u1 on f.user_id1=u1.user_id LEFT JOIN user_master u2 on f.user_id2=u2.user_id WHERE f.user_id2 = '$uid' or f.user_id1 = '$uid'";
+	$result = mysqli_query($conn,$sql);
+	if(mysqli_num_rows($result) > 0){
+	while($row = mysqli_fetch_assoc($result))
+	{
+		$data9[] = $row;
+	}
+	echo json_encode($data9);
+	}
+	else{
+		echo json_encode([]);
+	}
+}
+else if($datafor=="loadbook"){
+	$cid = $_POST['cid'];
+	$sql="SELECT b.title as title,b.loc as loc FROM chats c INNER JOIN book_master b on c.book_id=b.book_id where c.chat_id='$cid'";
+	$result = mysqli_query($conn,$sql);
+	if(mysqli_num_rows($result) > 0){
+	while($row = mysqli_fetch_assoc($result))
+	{
+		$data9[] = $row;
+	}
+	echo json_encode($data9);
+	}
+	else{
+		echo json_encode([]);
+	}
+}
+else if($datafor=="messages"){
+	$cid = $_POST['cid'];
+	$sql="SELECT m.msg_id as msg_id, m.msg as msg, m.from_uid as sender, m.to_uid as rec, u1.pfp as u1p, u1.username as u1u, u2.username as u2u from messages m left join user_master u1 on m.from_uid=u1.user_id left join user_master u2 on m.to_uid=u2.user_id where m.chat_id='$cid'";
+	$result = mysqli_query($conn,$sql);
+	if(mysqli_num_rows($result) > 0){
+	while($row = mysqli_fetch_assoc($result))
+	{
+		$data9[] = $row;
+	}
+	echo json_encode($data9);
+	}
+	else{
+		echo json_encode([]);
+	}
+}
+else if($datafor=="unread"){
+	$uid = $_POST['uid'];
+	$cid = $_POST['cid'];
+	$sql="SELECT c.chat_id AS cid, COUNT(m.msg_id) AS um FROM chats c INNER JOIN messages m ON c.chat_id = m.chat_id WHERE m.to_uid = $uid AND m.chat_id != $cid AND m.status = 0 GROUP BY c.chat_id;";
+	$result = mysqli_query($conn,$sql);
+	if(mysqli_num_rows($result) > 0){
+	while($row = mysqli_fetch_assoc($result))
+	{
+		$data9[] = $row;
+	}
+	echo json_encode($data9);
+	}
+	else{
+		echo json_encode([]);
+	}
+}
+else if($datafor=="recid"){
+	$cid = $_POST['cid'];
+	$sql="SELECT f.user_id1 as u1, u1.username as u1u, f.user_id2 as u2, u2.username as u2u, u1.pfp as pfp1, u2.pfp as pfp2 FROM chats c inner join friend f on c.frd_id = f.frd_id inner join user_master u1 on f.user_id1=u1.user_id inner join user_master u2 on f.user_id2=u2.user_id WHERE c.chat_id = '$cid'";
+	$result = mysqli_query($conn,$sql);
+	if(mysqli_num_rows($result) > 0){
+	while($row = mysqli_fetch_assoc($result))
+	{
+		$data8[] = $row;
+	}
+	echo json_encode($data8);
+	}
+	else{
+		echo json_encode([]);
+	}
+}
+
 ?>

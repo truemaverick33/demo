@@ -58,4 +58,17 @@ else if($datafor == "addfrd"){
 		echo json_encode($data);
 	}
 }
+else if($datafor == "markseen"){
+	$cid = $_POST["cid"];
+	$uid = $_POST["uid"];
+	$sql = "UPDATE messages SET status='1' where chat_id='$cid' AND to_uid='$uid'";
+	if(mysqli_query($conn,$sql)){
+		$data=array("updstat"=>"success");
+		echo json_encode($data);
+	}
+	else{
+		$data=array("updstat"=>"fail");
+		echo json_encode($data);
+	}
+}
 ?>
