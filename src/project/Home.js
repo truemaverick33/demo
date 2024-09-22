@@ -20,16 +20,16 @@ function Home(){
 	
 	useEffect(() => {
 		var uid = localStorage.getItem("userid");
+		if(uid){
 		$.ajax({type:"POST",url:connstr+"/backend/select.php",data:{datafor:"usersug",uid:uid},success(data){
-			console.log(data);
 			var obj = JSON.parse(data);
 			if(obj.length > 0){
 				setUsers(obj);
 			}
 		}});
+		}
 		
 		$.ajax({type:"POST",url:connstr+"/backend/select.php",data:{datafor:"books"},success(data){
-			console.log(data);
 			var obj = JSON.parse(data);
 			if(obj.length > 0){
 				setBooks(obj);

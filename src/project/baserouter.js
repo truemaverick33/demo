@@ -16,9 +16,12 @@ import Login from './Login.js'
 import Home from './Home.js';
 import Profile from './Profile.js';
 import Friends from './Friends.js';
+import Chat from './Chat.js';
 import { Carousel } from 'react-bootstrap';
 import logo from './logo.png';
 import connstr from './constr.js';
+
+let timeout;
 
 function BaseRoute()
 {
@@ -55,18 +58,27 @@ const logout = () =>{
 }
 
 const getNewFriendReqCount = () => {
+  clearTimeout(timeout);
   var uid = localStorage.getItem("userid");
   if(localStorage.getItem("logstatus")==="true"){
   $.ajax({type:"POST",url:connstr+"/backend/select.php",data:{datafor:'freqsc',uid:uid,ts:localStorage.getItem("lastcheck")},success(data){
+	try{
 	var obj = JSON.parse(data);
 	if(obj[0].cnt > 0){
 	setNoti(obj[0].cnt);
-	setTimeout(() => {
+	timeout = setTimeout(() => {
 		getNewFriendReqCount();
 	}, 10000);
 	}
 	else{
-	setTimeout(() => {
+	timeout = setTimeout(() => {
+		getNewFriendReqCount();
+	}, 10000);
+	}
+	}
+	catch(e){
+		console.log(e);
+		timeout = setTimeout(() => {
 		getNewFriendReqCount();
 	}, 10000);
 	}
@@ -111,6 +123,7 @@ return(
 <Route path="/register" element={<Register />} /> 
 <Route path="/profile" element={<Profile />} />
 <Route path="/friends" element={<Friends />} />
+<Route path="/chats" element={<Chat />} />
 </Routes>
 </Router>
 );

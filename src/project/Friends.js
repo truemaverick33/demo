@@ -164,7 +164,7 @@ const renderUsers = () => {
 						</Col>
 						</Row>
 						<Row><Col style={{padding:"7px"}}>
-						<Button style={{backgroundColor:"#536493",borderColor:"#536493",fontSize:"10px"}} onClick={(event) => viewProfile(friends[i].userid)}>View Profile</Button>
+						<Button style={{backgroundColor:"#536493",borderColor:"#536493",fontSize:"10px"}} onClick={(event) => viewProfile(friends[i].userid)}>View Profile</Button> &nbsp;
 						</Col>
 						</Row>
 						</Container>
